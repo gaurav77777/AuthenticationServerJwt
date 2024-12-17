@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.authServerJwt.entity.User;
 import com.example.authServerJwt.repository.UserRepository;
 import com.example.authServerJwt.security.JwtUtil;
+import java.util.Base64;
+
+
+import java.security.PublicKey;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -100,5 +105,25 @@ public class AuthController {
 		userRepository.save(user);
 		return "User registered successfully";
 	}
+	
+	
+	// Endpoint to return the public key
+    @GetMapping("/public-key")
+    public String getPublicKey() {
+        try {
+            PublicKey publicKey = jwtUtil.getPublicKey();  // Get the public key from JwtUtil
+
+            // Encode the public key in Base64 for easy transfer
+            String encodedKey = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+
+            // Return the encoded public key as a string (you can also choose PEM format)
+            return "-----BEGIN PUBLIC KEY-----\n" +
+                    encodedKey + "\n" +
+                    "-----END PUBLIC KEY-----";
+        } catch (Exception e) {
+            logger.error("Error fetching public key: {}", e.getMessage());
+            throw new RuntimeException("Error fetching public key: " + e.getMessage());
+        }
+    }
 
 }
