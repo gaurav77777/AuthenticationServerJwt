@@ -54,7 +54,7 @@ public class SecurityConfig {
         http.csrf().disable()
             .authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()  // Allow access to the H2 console
-                .antMatchers("/api/v1/auth/login", "/api/v1/auth/register").permitAll()  // Allow open access to login/register
+                .antMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/api/v1/auth/public-key").permitAll()  // Allow open access to login/register
                 .anyRequest().authenticated()  // Protect all other endpoints
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, customUserDetailsService), UsernamePasswordAuthenticationFilter.class) // Register JWT filter

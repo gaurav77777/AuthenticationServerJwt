@@ -50,6 +50,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	    @Override
 	    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 	            throws ServletException, IOException {
+	    	
+	    	String path = request.getServletPath();
+	    	if (path.startsWith("/api/v1/auth/login") ||
+	                path.startsWith("/api/v1/auth/register") ||
+	                path.startsWith("/api/v1/auth/public-key") ||
+	                path.startsWith("/h2-console")) {
+
+	                filterChain.doFilter(request, response);
+	                System.out.println("inside if:");
+	                return;
+	            }
 	        String token = getTokenFromRequest(request);
 	        
 	        System.out.println("token:"+token);
